@@ -10,7 +10,9 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Height="20">
+            <TextBox Name="txt_folderPath" Text="{Binding PickedFolderPath,  Mode=TwoWay}" IsReadOnly="true" Width="300" FontSize="12"/>
+            <Button Name="btn_browse" Click="btn_browse_Click" FontSize="12" Margin="20, 0" Padding="10,0">Browse</Button>
         </StackPanel>
     </Grid>
 </UserControl>
