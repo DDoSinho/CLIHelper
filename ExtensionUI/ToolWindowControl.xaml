@@ -9,10 +9,103 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              Name="MyToolWindow">
-    <Grid>
-        <StackPanel Orientation="Horizontal" Height="20">
-            <TextBox Name="txt_folderPath" Text="{Binding PickedFolderPath,  Mode=TwoWay}" IsReadOnly="true" Width="300" FontSize="12"/>
-            <Button Name="btn_browse" Click="btn_browse_Click" FontSize="12" Margin="20, 0" Padding="10,0">Browse</Button>
-        </StackPanel>
-    </Grid>
+	<UserControl.Resources>
+		<Style x:Key="ToolTextBox" TargetType="{x:Type TextBox}">
+			<Setter Property="Width" Value="300"/>
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Margin" Value="15,10"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsshell:VsBrushes.ActiveBorderKey}}"/>
+			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolboxDividerKey}}"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ControlEditHintTextKey}}"/>
+		</Style>
+		<Style x:Key="ToolButton" TargetType="{x:Type Button}">
+			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Padding" Value="5"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Border Background="{TemplateBinding Background}" Margin="15,10" Padding="5,0">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ComboBoxBackgroundKey}}"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="auto"/>
+			<ColumnDefinition Width="auto"/>
+		</Grid.ColumnDefinitions>
+		<TextBox Grid.Row="0" Grid.Column="0"
+                 Name="txt_folderPath"
+                 Text="{Binding PickedFolderPath,  Mode=TwoWay}"
+				 IsReadOnly="True"
+				 Style="{StaticResource ToolTextBox}"
+                 />
+		<Button Grid.Row="0" Grid.Column="1"
+                Name="btn_browse"
+                Click="btn_browse_Click"
+				Content="Browse"
+				Style="{StaticResource ToolButton}">
+		</Button>
+		<ComboBox Grid.Row="1" Grid.Column="0"
+				  Margin="15,10"
+                  Width="200"
+                  Height="20"
+                  IsTextSearchEnabled="False"
+                  Name="cmb_commands"
+                  ItemsSource="{Binding ItemList}"
+                  Text="{Binding SearchText}"
+				  HorizontalAlignment="Left">
+			<ComboBox.Resources>
+				<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Red"/>
+			</ComboBox.Resources>
+			<ComboBox.ItemContainerStyle>
+				<Style TargetType="{x:Type ComboBoxItem}">
+					<Style.Triggers>
+						<Trigger Property="IsMouseOver" Value="true">
+							<Setter Property="BorderBrush" Value="Red" />
+							<Setter Property="BorderThickness" Value="2" />
+						</Trigger>
+					</Style.Triggers>
+				</Style>
+			</ComboBox.ItemContainerStyle>
+		</ComboBox>
+		<TextBox Grid.Row="2" Grid.Column="0"
+                 Name="txt_help"
+                 Text="Help"
+                 Style="{StaticResource ToolTextBox}"/>
+		<Button Grid.Row="3" Grid.Column="0"
+                Name="btn_new_command"
+                HorizontalAlignment="Left"
+				Style="{StaticResource ToolButton}"
+                >New command</Button>
+		<TextBox Grid.Row="4" Grid.Column="0"
+                 Name="txt_command"
+                 Text="Command"
+                 Style="{StaticResource ToolTextBox}"/>
+		<Button Grid.Row="5" Grid.Column="0"
+                Name="btn_run"
+                HorizontalAlignment="Left"
+				Style="{StaticResource ToolButton}"
+                >Run</Button>
+	</Grid>
+
+
 </UserControl>

@@ -61,7 +61,7 @@
       <DependentUpon>ToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ToolWindowPackage.cs" />
-    <Compile Include="ViewModels\FileViewModel.cs" />
+    <Compile Include="ViewModels\ToolViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
