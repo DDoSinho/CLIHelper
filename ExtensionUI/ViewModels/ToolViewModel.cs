@@ -11,13 +11,17 @@ namespace ExtensionUI.ViewModels
     public class ToolViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        public ObservableCollection<string> ItemList { get; set; }
 
         private string _pickedFolderPath;
         public string PickedFolderPath
         {
-            get =>  _pickedFolderPath;
+            get => _pickedFolderPath;
             set
             {
+                if (_pickedFolderPath == value)
+                    return;
+
                 _pickedFolderPath = value;
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PickedFolderPath)));
@@ -39,6 +43,20 @@ namespace ExtensionUI.ViewModels
             }
         }
 
-        public ObservableCollection<string> ItemList { get; set; }
+        private bool _isEnabled;
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled == value)
+                    return;
+
+                _isEnabled = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEnabled)));
+            }
+        }
+
     }
 }
