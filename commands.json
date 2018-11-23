@@ -1,0 +1,43 @@
+[{
+	"Options": [{
+		"Name": "defaults",
+		"Description": "When true, disables interactive input prompts for options with a default.",
+		"Alias": null
+	}, {
+		"Name": "dry-run",
+		"Description": "When true, run through and report activity without writing out results.",
+		"Alias": "d"
+	}, {
+		"Name": "force",
+		"Description": " When true, force overwriting of existing files.",
+		"Alias": "f"
+	}, {
+		"Name": "interactive",
+		"Description": "When false, disables interactive input prompts.",
+		"Alias": null
+	}],
+	"Arguments": [{
+		"NumberOfParams": 2,
+		"Name": "schematic",
+		"Description": "The schematic or collection:schematic to generate.",
+		"Alias": null
+	}],
+	"Name": "generate",
+	"Description": "Generates and/or modifies files based on a schematic.",
+	"Alias": "g"
+}, {
+	"Options": [{
+		"Name": "configuration",
+		"Description": "Specify the configuration to use.",
+		"Alias": "c"
+	}],
+	"Arguments": [{
+		"NumberOfParams": 1,
+		"Name": "target",
+		"Description": "The target to run.",
+		"Alias": null
+	}],
+	"Name": "run",
+	"Description": "Runs a custom target defined in your project.",
+	"Alias": null
+}]
