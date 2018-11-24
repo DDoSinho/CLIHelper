@@ -142,7 +142,7 @@
                 Name="btn_run"
                 HorizontalAlignment="Left"
 				Style="{StaticResource ToolButton}"
-				IsEnabled="{Binding IsEnabled }"
+				Click="Btn_run_Click"
                 >Run</Button>
 
 	</Grid>
