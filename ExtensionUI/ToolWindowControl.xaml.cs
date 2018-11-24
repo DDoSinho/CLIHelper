@@ -38,21 +38,21 @@
 
             ToolViewModel.Commands = new System.Collections.ObjectModel.ObservableCollection<Command>();
 
-            ToolViewModel.PickedFolderPath = "Select folder";
+			ToolViewModel.PickedFolderPath = "Select folder";
 
-            this.InitializeComponent();
+			this.InitializeComponent();
 
-            this.DataContext = ToolViewModel;
+			this.DataContext = ToolViewModel;
 
             this.ArgumentTextBox = (TextBox)this.FindName("txt_argument");
             this.OptionsListBox = (ListBox)this.FindName("lst_options");
         }
 
-        private void btn_browse_Click(object sender, RoutedEventArgs e)
-        {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
-            {
-                var dialogResult = dialog.ShowDialog();
+		private void btn_browse_Click(object sender, RoutedEventArgs e)
+		{
+			using( var dialog = new System.Windows.Forms.FolderBrowserDialog() )
+			{
+				var dialogResult = dialog.ShowDialog();
 
                 if (dialogResult == System.Windows.Forms.DialogResult.OK)
                 {
@@ -165,9 +165,56 @@
             GenerateFullCommandText();
         }
 
-        private void lst_options_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            GenerateFullCommandText();
-        }
-    }
+
+		private async void Btn_run_Click(object sender, RoutedEventArgs e)
+		{
+			string cmd = "ng.cmd";
+			string args = "new proba --defaults --routing";
+
+			// Working directory - deafult is Solution folder
+			// TODO do not set it here / rather set this as default where user sets the folder
+			var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
+			string path = System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+
+			await Task.Run(() => ExecuteCmd(cmd, args, path));
+		}
+
+		private async Task ExecuteCmd(string cmd, string args, string path)
+		{
+			// Create Output window
+			var outputWindow = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+			var paneGuid = VSConstants.OutputWindowPaneGuid.GeneralPane_guid;
+			outputWindow.CreatePane(paneGuid, "CLIHelper", 1, 0);
+			outputWindow.GetPane(paneGuid, out IVsOutputWindowPane pane);
+
+			// Command to be executed
+			Process pProcess = new Process()
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					FileName = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\npm\\{cmd}",
+					Arguments = args,
+					CreateNoWindow = true,
+					UseShellExecute = false,
+					RedirectStandardOutput = true,
+					RedirectStandardError = true,
+					WorkingDirectory = path
+				}
+			};
+			pProcess.Start();
+
+			// Printig output and error to the created output window
+			var strOutput = pProcess.StandardOutput;
+			var strError = pProcess.StandardError;
+			while( !strOutput.EndOfStream )
+			{
+				pane.OutputString(strOutput.ReadLine() + "\n");
+			}
+			while( !strError.EndOfStream )
+			{
+				pane.OutputString(strError.ReadLine() + "\n");
+			}
+		}
+
+	}
 }
