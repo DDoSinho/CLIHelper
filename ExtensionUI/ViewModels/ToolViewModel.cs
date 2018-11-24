@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,7 +12,8 @@ namespace ExtensionUI.ViewModels
     public class ToolViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public ObservableCollection<string> ItemList { get; set; }
+        public ObservableCollection<string> CliTypes { get; set; }
+        public ObservableCollection<Command> Commands { get; set; }
 
         private string _pickedFolderPath;
         public string PickedFolderPath
@@ -28,23 +30,7 @@ namespace ExtensionUI.ViewModels
             }
         }
 
-        private string _searchText;
-
-        public string SearchText
-        {
-            get => _searchText;
-            set
-            {
-                if (_searchText == value)
-                    return;
-
-                _searchText = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SearchText)));
-            }
-        }
-
         private bool _isEnabled;
-
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -58,5 +44,18 @@ namespace ExtensionUI.ViewModels
             }
         }
 
+        private string _fullCommandText;
+        public string FullCommandText
+        {
+            get => _fullCommandText;
+            set
+            {
+                if (_fullCommandText == value)
+                    return;
+
+                _fullCommandText = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullCommandText)));
+            }
+        }
     }
 }

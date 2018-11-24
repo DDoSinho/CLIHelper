@@ -65,7 +65,6 @@
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
-			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="auto"/>
@@ -92,60 +91,102 @@
 		<ComboBox Grid.Row="1" Grid.Column="0"
 				  Margin="15,10"
                   Width="200"
-                  Height="20"
+                  Height="25"
 				  FontSize="12"
                   IsTextSearchEnabled="False"
-                  Name="cmb_command_type"
-                  ItemsSource="{Binding ItemList}"
-                  Text="{Binding SearchText}"
+                  Name="cmd_cli_type"
+                  ItemsSource="{Binding CliTypes}"
 				  HorizontalAlignment="Left" 
-				  SelectedIndex="0"
+				  SelectionChanged="cmd_cli_type_SelectionChanged"
 				  >
 		</ComboBox>
 
-		<StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Name="stckpnl" Orientation="Horizontal">
+		<StackPanel Grid.Row="2" Grid.Column="0"
+					Grid.ColumnSpan="3"
+					Name="stckpnl"
+					Orientation="Horizontal"
+					>
 			<ComboBox 
 				  Margin="15,10"
                   Width="200"
-                  Height="20"
+                  Height="25"
 				  FontSize="12"
                   IsTextSearchEnabled="False"
                   Name="cmb_commands"
-                  ItemsSource="{Binding ItemList}"
+                  ItemsSource="{Binding Commands, Mode=TwoWay}"
                   Text="{Binding SearchText}"
 				  HorizontalAlignment="Left" 
-				  SelectionChanged="cmb_commands_SelectionChanged">
+				  SelectionChanged="cmb_commands_SelectionChanged"
+				  IsEnabled="{Binding IsEnabled }"
+				>
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<ListBoxItem Content="{Binding Name}" ToolTip="{Binding Description}">
+						</ListBoxItem>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
 			</ComboBox>
+
+			<ComboBox 
+				  Margin="15,10"
+                  Width="200"
+                  Height="25"
+				  FontSize="12"
+                  IsTextSearchEnabled="False"
+                  Name="cmb_arguments"
+				  HorizontalAlignment="Left" 
+				  SelectionChanged="cmb_arguments_SelectionChanged"
+				  Visibility="Collapsed">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<ListBoxItem Content="{Binding Name}" ToolTip="{Binding Description}">
+						</ListBoxItem>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+
+			<TextBox
+                 Name="txt_argument"
+				 Style="{StaticResource ToolTextBox}"
+                 Width = "150"
+				 Height="20"
+				 Visibility="Collapsed"
+				 TextChanged="txt_argument_TextChanged"
+				/>
+
 		</StackPanel>
-		
 
-		<TextBox Grid.Row="3" Grid.Column="0"
-                 Name="txt_help"
-                 Text="Help"
-                 Style="{StaticResource ToolTextBox}"
-				 IsEnabled="{Binding IsEnabled }"/>
+		<ListBox Grid.Row="3" Grid.Column="0"
+				 Name="lst_options"
+				 Margin="15,10"
+                 Width="200"
+				 FontSize="12"
+				 HorizontalAlignment="Left"
+				 ScrollViewer.VerticalScrollBarVisibility="Visible"
+				 SelectionMode="Multiple"
+				 SelectionChanged="lst_options_SelectionChanged"
+				 Visibility="Collapsed"
+				 >
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<ListBoxItem Content="{Binding Name}" ToolTip="{Binding Description}">
+					</ListBoxItem>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 
-		<Button Grid.Row="4" Grid.Column="0"
-                Name="btn_new_command"
-                HorizontalAlignment="Left"
-				Style="{StaticResource ToolButton}"
-				IsEnabled="{Binding IsEnabled }"
-                >New command</Button>
-
-		<TextBox Grid.Row="5" Grid.Column="0"
+		<TextBox Grid.Row="4" Grid.Column="0"
                  Name="txt_command"
-                 Text="Command"
+                 Text="{ Binding FullCommandText }"
                  Style="{StaticResource ToolTextBox}"
-				 IsEnabled="{Binding IsEnabled }"/>
+				 IsEnabled="{Binding IsEnabled }"
+				 IsReadOnly="True"/>
 
-		<Button Grid.Row="6" Grid.Column="0"
+		<Button Grid.Row="5" Grid.Column="0"
                 Name="btn_run"
                 HorizontalAlignment="Left"
 				Style="{StaticResource ToolButton}"
 				IsEnabled="{Binding IsEnabled }"
                 >Run</Button>
-
 	</Grid>
-
-
 </UserControl>
