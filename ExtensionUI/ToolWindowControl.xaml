@@ -39,26 +39,10 @@
 				</Trigger>
 			</Style.Triggers>
 		</Style>
-
-		<Style TargetType="{x:Type ComboBoxItem}" x:Key="asdasd">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type ComboBoxItem}">
-						<Border x:Name="myBorder">
-							<ContentPresenter />
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" TargetName="myBorder" Value="Yellow" />
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
 	</UserControl.Resources>
 	<Grid Name="grid_root">
 		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
@@ -88,26 +72,35 @@
 				Style="{StaticResource ToolButton}">
 		</Button>
 
-		<ComboBox Grid.Row="1" Grid.Column="0"
-				  Margin="15,10"
+		<StackPanel Grid.Row="1" Grid.Column="0"
+					Orientation="Vertical"
+					>
+			<Label Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"
+				   Content="CLI type:"
+				   Margin="10,0,0,0"/>
+			<ComboBox 
                   Width="200"
                   Height="25"
 				  FontSize="12"
+				  Margin="15,0,0,0"
                   IsTextSearchEnabled="False"
                   Name="cmd_cli_type"
                   ItemsSource="{Binding CliTypes}"
 				  HorizontalAlignment="Left" 
 				  SelectionChanged="cmd_cli_type_SelectionChanged"
+				  SelectedIndex="0"
+				  ToolTip="Select an CLI type, or add a new one"
 				  >
-		</ComboBox>
+			</ComboBox>
+		</StackPanel>
 
 		<StackPanel Grid.Row="2" Grid.Column="0"
-					Grid.ColumnSpan="3"
-					Name="stckpnl"
-					Orientation="Horizontal"
-					>
+					Orientation="Vertical">
+			<Label Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"
+				   Content="Commands:"
+				   Margin="10,0,0,0"/>
 			<ComboBox 
-				  Margin="15,10"
+				  Margin="15,0,0,0"
                   Width="200"
                   Height="25"
 				  FontSize="12"
@@ -118,6 +111,7 @@
 				  HorizontalAlignment="Left" 
 				  SelectionChanged="cmb_commands_SelectionChanged"
 				  IsEnabled="{Binding IsEnabled }"
+				  ToolTip="Select a command from list"
 				>
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
@@ -126,63 +120,186 @@
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-
-			<ComboBox 
-				  Margin="15,10"
-                  Width="200"
-                  Height="25"
-				  FontSize="12"
-                  IsTextSearchEnabled="False"
-                  Name="cmb_arguments"
-				  HorizontalAlignment="Left" 
-				  SelectionChanged="cmb_arguments_SelectionChanged"
-				  Visibility="Collapsed">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<ListBoxItem Content="{Binding Name}" ToolTip="{Binding Description}">
-						</ListBoxItem>
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
-
-			<TextBox
-                 Name="txt_argument"
-				 Style="{StaticResource ToolTextBox}"
-                 Width = "150"
-				 Height="20"
-				 Visibility="Collapsed"
-				 TextChanged="txt_argument_TextChanged"
-				/>
-
 		</StackPanel>
 
-		<ListBox Grid.Row="3" Grid.Column="0"
-				 Name="lst_options"
-				 Margin="15,10"
-                 Width="200"
-				 FontSize="12"
-				 HorizontalAlignment="Left"
-				 ScrollViewer.VerticalScrollBarVisibility="Visible"
-				 SelectionMode="Multiple"
-				 SelectionChanged="lst_options_SelectionChanged"
-				 Visibility="Collapsed"
-				 >
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<ListBoxItem Content="{Binding Name}" ToolTip="{Binding Description}">
-					</ListBoxItem>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+		<Expander Grid.Row="3" Grid.Column="0"
+				  Header="Arguments"
+				  Margin="15,15,0,5"
+				  Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"
+				  Name="exp_arguments"
+				  ToolTip="You can select here the arguments of the command"
+				  IsEnabled="False"
+				  >
+			<DataGrid 
+				  ItemsSource="{Binding Arguments}"
+				  AutoGenerateColumns="False"
+				  FontSize="12"
+				  Width="285"
+				  Padding="15,5,0,0"
+				  CanUserAddRows="False"
+				  CanUserDeleteRows="False"
+				  CanUserReorderColumns="False"
+				  CanUserResizeColumns="True"
+				  CanUserResizeRows="True"
+				  CanUserSortColumns="False"
+				  HeadersVisibility="None"
+				  GridLinesVisibility="None"
+				  BorderThickness="0"
+				  FocusVisualStyle="{x:Null}"
+				  Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+				  >
+				<DataGrid.Columns>
+					<DataGridTextColumn 
+					Binding="{Binding Name}"
+					IsReadOnly="True"
+					Width="100">
+						<DataGridTextColumn.CellStyle>
+							<Style TargetType="DataGridCell">
+								<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
+								<Setter Property="BorderThickness" Value="0"/>
+								<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+								<Setter Property="ToolTip" Value="{Binding Description}"/>
+							</Style>
+						</DataGridTextColumn.CellStyle>
+					</DataGridTextColumn>
 
-		<TextBox Grid.Row="4" Grid.Column="0"
+					<DataGridCheckBoxColumn 
+					Binding="{Binding IsSelected}"
+					Width="40">
+						<DataGridCheckBoxColumn.CellStyle>
+							<Style TargetType="DataGridCell">
+								<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
+								<Setter Property="BorderThickness" Value="0"/>
+								<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+								<Setter Property="ToolTip" Value="Select argument"/>
+							</Style>
+						</DataGridCheckBoxColumn.CellStyle>
+					</DataGridCheckBoxColumn>
+
+					<DataGridTextColumn 
+					Binding="{Binding ArgumentValue}"
+					Width="*">
+						<DataGridTextColumn.CellStyle>
+							<Style TargetType="DataGridCell">
+								<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
+								<Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsshell:VsBrushes.ActiveBorderKey}}"/>
+								<Setter Property="IsEnabled" Value="{Binding IsEditable}"/>
+								<Setter Property="ToolTip" Value="{Binding ArgumentToolTip}"/>
+							</Style>
+						</DataGridTextColumn.CellStyle>
+					</DataGridTextColumn>
+				</DataGrid.Columns>
+			</DataGrid>
+		</Expander>
+
+		<Expander Grid.Row="4" Grid.Column="0"
+				  Header="Options"
+				  Margin="15,5"
+				  Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"
+				  ToolTip="You can select here the options of the command"
+				  IsEnabled="False"
+				  >
+			<DataGrid 
+				  ItemsSource="{Binding OptionModel}"
+				  AutoGenerateColumns="False"
+				  FontSize="12"
+				  Width="300"
+				  CanUserAddRows="False"
+				  CanUserDeleteRows="False"
+				  CanUserReorderColumns="False"
+				  CanUserResizeColumns="True"
+				  CanUserResizeRows="True"
+				  CanUserSortColumns="False"
+				  HeadersVisibility="None"
+				  GridLinesVisibility="None"
+				  BorderThickness="0"
+				  FocusVisualStyle="{x:Null}"
+				  Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+				>
+				<DataGrid.Columns>
+					<DataGridTextColumn Binding="{Binding Name}" Width="150" IsReadOnly="True">
+						<DataGridTextColumn.CellStyle>
+							<Style TargetType="DataGridCell">
+								<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
+								<Setter Property="BorderThickness" Value="0"/>
+								<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+							</Style>
+						</DataGridTextColumn.CellStyle>
+					</DataGridTextColumn>
+					<DataGridTemplateColumn Width="*">
+						<DataGridTemplateColumn.CellStyle>
+							<Style TargetType="DataGridCell">
+								<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+								<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
+								<Setter Property="BorderThickness" Value="0"/>
+								<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+							</Style>
+						</DataGridTemplateColumn.CellStyle>
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<ContentControl Content="{Binding}">
+									<ContentControl.Style>
+										<Style TargetType="ContentControl">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding InputType}" Value="TextBox">
+													<Setter Property="ContentTemplate">
+														<Setter.Value>
+															<DataTemplate>
+																<TextBox 
+																	 Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+																	 Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ControlEditHintTextKey}}"
+																	 Text="{Binding OptionValue, Mode=TwoWay}"
+																	 />
+															</DataTemplate>
+														</Setter.Value>
+													</Setter>
+												</DataTrigger>
+												<DataTrigger Binding="{Binding InputType}" Value="CheckBox">
+													<Setter Property="ContentTemplate">
+														<Setter.Value>
+															<DataTemplate>
+																<CheckBox HorizontalAlignment="Center" 
+																	  IsChecked="{Binding IsChecked, Mode=TwoWay}"
+																	  />
+															</DataTemplate>
+														</Setter.Value>
+													</Setter>
+													<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</ContentControl.Style>
+								</ContentControl>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+				</DataGrid.Columns>
+			</DataGrid>
+
+		</Expander>
+
+		<TextBox Grid.Row="5" Grid.Column="0"
                  Name="txt_command"
                  Text="{ Binding FullCommandText }"
                  Style="{StaticResource ToolTextBox}"
 				 IsEnabled="{Binding IsEnabled }"
 				 IsReadOnly="True"/>
 
-		<Button Grid.Row="5" Grid.Column="0"
+		<Button Grid.Row="5" Grid.Column="1"
+                Name="btn_copy"
+                Click="btn_copy_Click"
+				Content="Copy"
+				Width="80"
+				HorizontalAlignment="Left"
+				Style="{StaticResource ToolButton}"
+				ToolTip="Copy command text to clipboard">
+		</Button>
+
+		<Button Grid.Row="6" Grid.Column="0"
                 Name="btn_run"
                 HorizontalAlignment="Left"
 				Style="{StaticResource ToolButton}"

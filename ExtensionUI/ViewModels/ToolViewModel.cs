@@ -1,4 +1,5 @@
-﻿using Model.Models;
+﻿using ExtensionUI.Model;
+using Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -57,5 +58,9 @@ namespace ExtensionUI.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullCommandText)));
             }
         }
+
+        public ObservableCollection<OptionModel> OptionModel { get; set; }
+        public ObservableCollection<ArgumentModel> Arguments { get; set; }
+
     }
 }
