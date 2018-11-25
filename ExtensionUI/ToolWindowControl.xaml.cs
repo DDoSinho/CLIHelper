@@ -18,14 +18,15 @@
     using System.Diagnostics;
     using global::Model.Models;
     using global::Model.Parser;
+    using System.Collections.ObjectModel;
+    using ExtensionUI.Helper;
 
     /// <summary>
     /// Interaction logic for ToolWindowControl.
     /// </summary>
     public partial class ToolWindowControl : UserControl
     {
-        public ToolViewModel ToolViewModel { get; set; } = new ToolViewModel();
-
+        private ToolViewModel ToolViewModel { get; set; } = new ToolViewModel();
         private Command _selectedCommand;
 
         /// <summary>
@@ -33,40 +34,15 @@
         /// </summary>
         public ToolWindowControl()
         {
-            ToolViewModel.CliTypes = new System.Collections.ObjectModel.ObservableCollection<string>();
+            ToolViewModel.CliTypes = new ObservableCollection<string>();
             ToolViewModel.CliTypes.Add("angular");
 
-            ToolViewModel.Commands = new System.Collections.ObjectModel.ObservableCollection<Command>();
+            ToolViewModel.Commands = new ObservableCollection<Command>();
 
             ToolViewModel.PickedFolderPath = "Select folder";
 
-
-            ToolViewModel.OptionModel = new System.Collections.ObjectModel.ObservableCollection<Model.OptionModel>()
-            {
-                new Model.OptionModel()
-                {
-                    Name = "asd",
-                    InputType = "TextBox",
-                    Description = "asd desc",
-                    OptionValue = "Adsadas"
-                },
-                new Model.OptionModel()
-                {
-                    Name = "lul",
-                    InputType = "CheckBox",
-                    Description = "aassasd desc",
-                    IsChecked = false
-                },
-                new Model.OptionModel()
-                {
-                    Name = "lel",
-                    InputType = "CheckBox",
-                    Description = "asdads desc",
-                    IsChecked = true
-                },
-            };
-
-            ToolViewModel.Arguments = new System.Collections.ObjectModel.ObservableCollection<Model.ArgumentModel>();
+            ToolViewModel.Arguments = new ItemsChangeObservableCollection<Model.ArgumentModel>();
+            ToolViewModel.Options = new ItemsChangeObservableCollection<Model.OptionModel>();
 
             this.InitializeComponent();
 
@@ -113,7 +89,7 @@
             if (_selectedCommand != null)
             {
                 ToolViewModel.Arguments.Clear();
-                var expander = (Expander)this.FindName("exp_arguments");
+                var argumentExpander = (Expander)this.FindName("exp_arguments");
 
                 if (_selectedCommand.Arguments != null && _selectedCommand.Arguments.Count > 0)
                 {
@@ -131,12 +107,38 @@
                         ToolViewModel.Arguments.Add(argumentModel);
                     }
 
-                    expander.IsEnabled = true;
+                    argumentExpander.IsEnabled = true;
                 }
                 else if (_selectedCommand.Arguments != null && _selectedCommand.Arguments.Count == 0)
                 {
-                    expander.IsEnabled = false;
-                    expander.IsExpanded = false;
+                    argumentExpander.IsEnabled = false;
+                    argumentExpander.IsExpanded = false;
+                }
+
+                ToolViewModel.Options.Clear();
+                var optionsExpander = (Expander)this.FindName("exp_arguments");
+
+                if (_selectedCommand.Options != null && _selectedCommand.Options.Count > 0)
+                {
+                    foreach (var option in _selectedCommand.Options)
+                    {
+                        var optionModel = new Model.ArgumentModel()
+                        {
+                            Name = option.Name,
+                            Alias = option.Alias,
+                            Description = option.Description,
+                            IsSelected = false,
+                        };
+
+                        ToolViewModel.Arguments.Add(optionModel);
+                    }
+
+                    optionsExpander.IsEnabled = true;
+                }
+                else if (_selectedCommand.Arguments != null && _selectedCommand.Arguments.Count == 0)
+                {
+                    optionsExpander.IsEnabled = false;
+                    optionsExpander.IsExpanded = false;
                 }
             }
         }

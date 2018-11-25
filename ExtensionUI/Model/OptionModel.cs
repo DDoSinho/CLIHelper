@@ -9,15 +9,11 @@ namespace ExtensionUI.Model
 {
     public class OptionModel : INotifyPropertyChanged
     {
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public string Alias { get; set; }
-
-        public string InputType { get; set; }
-
         public event PropertyChangedEventHandler PropertyChanged;
+        public string Name { get; set; }
+        public string Description { get; set; }
+        private string Alias { get; set; }
+        public string InputType { get; set; }
 
         private bool _isChecked;
         public bool IsChecked

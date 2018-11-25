@@ -1,4 +1,5 @@
-﻿using ExtensionUI.Model;
+﻿using ExtensionUI.Helper;
+using ExtensionUI.Model;
 using Model.Models;
 using System;
 using System.Collections.Generic;
@@ -59,8 +60,8 @@ namespace ExtensionUI.ViewModels
             }
         }
 
-        public ObservableCollection<OptionModel> OptionModel { get; set; }
-        public ObservableCollection<ArgumentModel> Arguments { get; set; }
+        public ItemsChangeObservableCollection<OptionModel> Options { get; set; }
+        public ItemsChangeObservableCollection<ArgumentModel> Arguments { get; set; }
 
     }
 }
