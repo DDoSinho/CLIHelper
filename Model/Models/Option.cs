@@ -8,6 +8,6 @@ namespace Model.Models
 {
 	public class Option : CmdBase
 	{
-		//public bool Value { get; set; }
+		public string OptionType { get; set; }
 	}
 }
