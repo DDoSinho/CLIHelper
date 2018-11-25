@@ -12,8 +12,8 @@ namespace ExtensionUI.Model
         public event PropertyChangedEventHandler PropertyChanged;
         public string Name { get; set; }
         public string Description { get; set; }
-        private string Alias { get; set; }
-        public string InputType { get; set; }
+        public string Alias { get; set; }
+		public string OptionType { get; set; }
 
         private bool _isChecked;
         public bool IsChecked
@@ -41,6 +41,11 @@ namespace ExtensionUI.Model
                 _optionValue = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OptionValue)));
             }
+        }
+
+        public bool IsSelected
+        {
+            get => !String.IsNullOrEmpty(OptionValue) || IsChecked;
         }
     }
 }

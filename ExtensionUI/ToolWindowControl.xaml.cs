@@ -116,26 +116,27 @@
                 }
 
                 ToolViewModel.Options.Clear();
-                var optionsExpander = (Expander)this.FindName("exp_arguments");
+                var optionsExpander = (Expander)this.FindName("exp_options");
 
                 if (_selectedCommand.Options != null && _selectedCommand.Options.Count > 0)
                 {
                     foreach (var option in _selectedCommand.Options)
                     {
-                        var optionModel = new Model.ArgumentModel()
+                        var optionModel = new Model.OptionModel()
                         {
                             Name = option.Name,
                             Alias = option.Alias,
                             Description = option.Description,
-                            IsSelected = false,
+                            OptionType = option.OptionType,
+                            IsChecked = true
                         };
 
-                        ToolViewModel.Arguments.Add(optionModel);
+                        ToolViewModel.Options.Add(optionModel);
                     }
 
                     optionsExpander.IsEnabled = true;
                 }
-                else if (_selectedCommand.Arguments != null && _selectedCommand.Arguments.Count == 0)
+                else if (_selectedCommand.Options != null && _selectedCommand.Options.Count == 0)
                 {
                     optionsExpander.IsEnabled = false;
                     optionsExpander.IsExpanded = false;
@@ -201,6 +202,46 @@
         private void btn_copy_Click(object sender, RoutedEventArgs e)
         {
             Clipboard.SetText(ToolViewModel.FullCommandText);
+        }
+
+        private void btn_preview_Click(object sender, RoutedEventArgs e)
+        {
+            var stringBuilder = new StringBuilder("ng");
+
+            if (_selectedCommand != null)
+                stringBuilder.Append(" "+_selectedCommand.Name);
+
+            foreach (var argument in ToolViewModel.Arguments)
+            {
+                if (argument.IsSelected)
+                {
+                    if (argument.NumberOfParams > 0)
+                    {
+                        if (!String.IsNullOrEmpty(argument.ArgumentValue))
+                            stringBuilder.Append(" " + argument.Name + "=" + argument.ArgumentValue);
+                        else
+                            ToolViewModel.InvalidCommand = true;
+                    }
+                    else
+                    {
+                        stringBuilder.Append(" "+ argument.Name);
+                    }
+                }
+            }
+
+            foreach (var option in ToolViewModel.Options)
+            {
+                if (option.IsChecked)
+                {
+                    stringBuilder.Append(" " + option.Name);
+                }
+                else if (!String.IsNullOrEmpty(option.OptionValue))
+                {
+                    stringBuilder.Append(" " + option.Name+"="+option.OptionValue);
+                }
+            }
+
+            ToolViewModel.FullCommandText = stringBuilder.ToString();
         }
     }
 }

@@ -63,5 +63,6 @@ namespace ExtensionUI.ViewModels
         public ItemsChangeObservableCollection<OptionModel> Options { get; set; }
         public ItemsChangeObservableCollection<ArgumentModel> Arguments { get; set; }
 
+        public bool InvalidCommand { get; set; }
     }
 }
