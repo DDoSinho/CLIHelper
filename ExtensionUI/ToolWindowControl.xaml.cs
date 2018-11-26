@@ -282,7 +282,7 @@
 
 		private void InitTool()
 		{
-			var sourceFile = $"{Environment.CurrentDirectory}\\angular.json";
+			var sourceFile = $"{Environment.CurrentDirectory}\\..\\..\\angular.json";
 			var destFile = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper";
 			DirectoryInfo di = Directory.CreateDirectory(destFile);
 			File.Copy(sourceFile, $"{destFile}\\angular.json", true);

@@ -69,6 +69,7 @@
     <Compile Include="ViewModels\ToolViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="angular.json" />
     <None Include="app.config" />
     <None Include="Key.snk" />
     <None Include="packages.config" />
