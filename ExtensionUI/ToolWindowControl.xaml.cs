@@ -35,7 +35,8 @@
         public ToolWindowControl()
         {
             ToolViewModel.CliTypes = new ObservableCollection<string>();
-            ToolViewModel.CliTypes.Add("angular");
+			InitTool();
+            //ToolViewModel.CliTypes.Add("angular");
 
             ToolViewModel.Commands = new ObservableCollection<Command>();
 
@@ -270,10 +271,28 @@
 
             if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                var streamReader = new System.IO.StreamReader(fileDialog.FileName);
-                System.IO.File.WriteAllText(Environment.CurrentDirectory,streamReader.ReadToEnd());
+				DirectoryInfo di = Directory.CreateDirectory($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper");
+				var dir = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper\\{fileDialog.SafeFileName}";
+
+				var streamReader = new StreamReader(fileDialog.FileName);
+                File.WriteAllText(dir ,streamReader.ReadToEnd());
                 streamReader.Close();
-            }
+				ToolViewModel.CliTypes.Add(fileDialog.SafeFileName.Split('.')[0]);
+			}
         }
-    }
+
+		private void InitTool()
+		{
+			var sourceFile = $"{Environment.CurrentDirectory}\\angular.json";
+			var destFile = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper";
+			DirectoryInfo di = Directory.CreateDirectory(destFile);
+			File.Copy(sourceFile, $"{destFile}\\angular.json", true);
+
+			FileInfo[] Files = di.GetFiles("*.json");
+			foreach( FileInfo file in Files )
+			{
+				ToolViewModel.CliTypes.Add(file.Name.Split('.')[0]);
+			}
+		}
+	}
 }

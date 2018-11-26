@@ -51,7 +51,7 @@ namespace ExtensionUI.Model
 
         public string ArgumentToolTip
         {
-            get => $"{NumberOfParams} parameter(s) should add (seperate with withspace)";
+            get => $"{NumberOfParams} parameter(s) should add (seperate with whitespace)";
         }
 
     }

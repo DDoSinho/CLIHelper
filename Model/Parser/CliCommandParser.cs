@@ -13,7 +13,7 @@ namespace Model.Parser
     {
         public IList<Command> Deserialize(string jsonFilename)
         {
-            string jsonFilePath = Environment.CurrentDirectory + @"\" + jsonFilename + ".json";
+			string jsonFilePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper\\{jsonFilename}.json";
             string json = File.ReadAllText(jsonFilePath);
 
             var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
