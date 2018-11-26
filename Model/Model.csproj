@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Argument.cs" />
+    <Compile Include="Models\CLITool.cs" />
     <Compile Include="Models\CmdBase.cs" />
     <Compile Include="Models\Command.cs" />
     <Compile Include="Models\Option.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="ExtensionModel.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

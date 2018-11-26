@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Model.Models.Argument">
+    <Position X="4" Y="5.75" Width="2" />
+    <InheritanceLine Type="Model.Models.CmdBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="2.488" />
+        <Point X="5.5" Y="4.885" />
+        <Point X="5.5" Y="4.885" />
+        <Point X="5.5" Y="5.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Argument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.Models.CmdBase">
+    <Position X="4.5" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\CmdBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.Models.Command">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <InheritanceLine Type="Model.Models.CmdBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="2.488" />
+        <Point X="5.5" Y="3.103" />
+        <Point X="2.875" Y="3.103" />
+        <Point X="2.875" Y="3.5" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Options" Type="Model.Models.Option" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.25" Y="4.062" />
+        <Point X="5.417" Y="4.062" Type="JumpStart" />
+        <Point X="5.583" Y="4.062" Type="JumpEnd" />
+        <Point X="6.875" Y="4.062" />
+        <Point X="6.875" Y="5.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="1.872" Y="1.839" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Arguments" Type="Model.Models.Argument" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.094" Y="4.497" />
+        <Point X="2.094" Y="6.312" />
+        <Point X="4" Y="6.312" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.223" Y="1.32" Height="0.182" Width="1.975" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAABAAAA=</HashCode>
+      <FileName>Models\Command.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Arguments" />
+      <Property Name="Options" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Model.Models.Option">
+    <Position X="6.5" Y="5.75" Width="2" />
+    <InheritanceLine Type="Model.Models.CmdBase" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="2.488" />
+        <Point X="5.5" Y="3.104" />
+        <Point X="7.938" Y="3.104" />
+        <Point X="7.938" Y="5.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Option.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.Models.CLITool">
+    <Position X="1.75" Y="1" Width="2.25" />
+    <AssociationLine Name="Commands" Type="Model.Models.Command" FixedFromPoint="true">
+      <Path>
+        <Point X="2.188" Y="2.296" />
+        <Point X="2.188" Y="3.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.525" Y="0.779" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\CLITool.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Commands" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
