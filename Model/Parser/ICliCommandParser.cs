@@ -9,6 +9,6 @@ namespace Model.Parser
 {
     public interface ICliCommandParser
     {
-        IList<Command> Deserialize(string jsonFilename);
+		CLITool Deserialize(string jsonFilename);
     }
 }

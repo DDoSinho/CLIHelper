@@ -11,14 +11,14 @@ namespace Model.Parser
 {
     public class CliCommandParser : ICliCommandParser
     {
-        public IList<Command> Deserialize(string jsonFilename)
+        public CLITool Deserialize(string jsonFilename)
         {
 			string jsonFilePath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper\\{jsonFilename}.json";
             string json = File.ReadAllText(jsonFilePath);
 
             var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
-            var ser = new DataContractJsonSerializer(typeof(List<Command>));
-            var deserializedCommands = ser.ReadObject(memoryStream) as List<Command>;
+            var ser = new DataContractJsonSerializer(typeof(CLITool));
+            var deserializedCommands = ser.ReadObject(memoryStream) as CLITool;
             memoryStream.Close();
 
             return deserializedCommands;

@@ -36,7 +36,6 @@
         {
             ToolViewModel.CliTypes = new ObservableCollection<string>();
 			InitTool();
-            //ToolViewModel.CliTypes.Add("angular");
 
             ToolViewModel.Commands = new ObservableCollection<Command>();
 
@@ -76,9 +75,10 @@
             if (!String.IsNullOrEmpty(selectedCliType))
             {
                 var parser = new CliCommandParser();
-                var commandList = parser.Deserialize(selectedCliType);
+                var tool = parser.Deserialize(selectedCliType);
+				ToolViewModel.Executable = tool.ExecutableFile;
 
-                foreach (var command in commandList)
+                foreach (var command in tool.Commands)
                 {
                     ToolViewModel.Commands.Add(command);
                 }
@@ -166,7 +166,7 @@
             {
                 invalidLabel.Visibility = Visibility.Hidden;
 
-                string cmd = "ng.cmd";
+				string cmd = ToolViewModel.Executable;
 				string args = GenerateCommand();
                 //string args = "new proba --defaults --routing";
 				var path = ToolViewModel.PickedFolderPath;
@@ -226,7 +226,6 @@
         {
             ToolViewModel.InvalidCommand = false;
 
-            //var stringBuilder = new StringBuilder("ng");
             var stringBuilder = new StringBuilder();
 
             if (_selectedCommand != null)
@@ -239,7 +238,7 @@
                     if (argument.NumberOfParams > 0)
                     {
                         if (!String.IsNullOrEmpty(argument.ArgumentValue) && (argument.ArgumentValue.Split(' ').Length == argument.NumberOfParams))
-                            stringBuilder.Append(" " /*+ argument.Name + "="*/ + argument.ArgumentValue);
+                            stringBuilder.Append(" " + argument.ArgumentValue);
                         else
                             ToolViewModel.InvalidCommand = true;
                     }
