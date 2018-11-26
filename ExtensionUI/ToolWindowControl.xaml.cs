@@ -39,7 +39,7 @@
 
             ToolViewModel.Commands = new ObservableCollection<Command>();
 
-            ToolViewModel.PickedFolderPath = "Select folder";
+			ToolViewModel.PickedFolderPath = "Select folder";
 
             ToolViewModel.Arguments = new ItemsChangeObservableCollection<Model.ArgumentModel>();
             ToolViewModel.Options = new ItemsChangeObservableCollection<Model.OptionModel>();
@@ -53,6 +53,10 @@
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
+				var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
+				string path = System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+
+				dialog.SelectedPath = path;
                 var dialogResult = dialog.ShowDialog();
 
                 if (dialogResult == System.Windows.Forms.DialogResult.OK)
@@ -142,14 +146,15 @@
             }
         }
 
-        private void GenerateFullCommandText()
+        private string GenerateFullCommandText()
         {
+			string cmd = "ng";
+			string args = GenerateCommand();
+			return $"{cmd} {args}";
+		}
 
-        }
-
-        private async void Btn_run_Click(object sender, RoutedEventArgs e)
+		private async void Btn_run_Click(object sender, RoutedEventArgs e)
         {
-            string command = GenerateCommand();
             var invalidLabel = (Label)this.FindName("lbl_invalid");
 
             if (ToolViewModel.InvalidCommand)
@@ -161,12 +166,9 @@
                 invalidLabel.Visibility = Visibility.Hidden;
 
                 string cmd = "ng.cmd";
-                string args = "new proba --defaults --routing";
-
-                // Working directory - deafult is Solution folder
-                // TODO do not set it here / rather set this as default where user sets the folder
-                var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
-                string path = System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+				string args = GenerateCommand();
+                //string args = "new proba --defaults --routing";
+				var path = ToolViewModel.PickedFolderPath;
 
                 await Task.Run(() => ExecuteCmd(cmd, args, path));
             }
@@ -216,14 +218,15 @@
 
         private void btn_preview_Click(object sender, RoutedEventArgs e)
         {
-            ToolViewModel.FullCommandText = GenerateCommand();
+            ToolViewModel.FullCommandText = GenerateFullCommandText();
         }
 
         private string GenerateCommand()
         {
             ToolViewModel.InvalidCommand = false;
 
-            var stringBuilder = new StringBuilder("ng");
+            //var stringBuilder = new StringBuilder("ng");
+            var stringBuilder = new StringBuilder();
 
             if (_selectedCommand != null)
                 stringBuilder.Append(" " + _selectedCommand.Name);
@@ -235,7 +238,7 @@
                     if (argument.NumberOfParams > 0)
                     {
                         if (!String.IsNullOrEmpty(argument.ArgumentValue) && (argument.ArgumentValue.Split(' ').Length == argument.NumberOfParams))
-                            stringBuilder.Append(" " + argument.Name + "=" + argument.ArgumentValue);
+                            stringBuilder.Append(" " /*+ argument.Name + "="*/ + argument.ArgumentValue);
                         else
                             ToolViewModel.InvalidCommand = true;
                     }
