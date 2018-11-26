@@ -89,9 +89,20 @@
 				  SelectionChanged="cmd_cli_type_SelectionChanged"
 				  SelectedIndex="0"
 				  ToolTip="Select an CLI type, or add a new one"
+				  IsEnabled="{Binding IsEnabled}"
 				  >
 			</ComboBox>
 		</StackPanel>
+
+		<Button Grid.Row="1" Grid.Column="1"
+				Name="btn_upload"
+				Style="{StaticResource ToolButton}"
+				Content="Upload"
+				Width="80"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Bottom"
+				Click="btn_upload_Click"
+				></Button>
 
 		<StackPanel Grid.Row="2" Grid.Column="0"
 					Orientation="Vertical">
@@ -257,7 +268,7 @@
 																<TextBox 
 																	 Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
 																	 Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ControlEditHintTextKey}}"
-																	 Text="{Binding OptionValue, Mode=TwoWay}"
+																	 Text="{Binding OptionValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 																	 />
 															</DataTemplate>
 														</Setter.Value>
@@ -269,7 +280,7 @@
 														<Setter.Value>
 															<DataTemplate>
 																<CheckBox HorizontalAlignment="Left" 
-																	  IsChecked="{Binding IsChecked, Mode=TwoWay}"
+																	  IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 																	  />
 															</DataTemplate>
 														</Setter.Value>
@@ -289,15 +300,22 @@
 
 		</Expander>
 
-		<TextBox Grid.Row="5" Grid.Column="0"
-                 Name="txt_command"
-                 Text="{ Binding FullCommandText }"
-                 Style="{StaticResource ToolTextBox}"
-				 IsEnabled="{Binding IsEnabled }"
-				 />
+		<StackPanel Grid.Row="5" Grid.Column="0"
+			>
+			<Label Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"
+				   Content="Command preview:"
+				   Margin="10,0,0,0"/>
+			<TextBox 
+					 Name="txt_command"
+					 Text="{ Binding FullCommandText }"
+					 Style="{StaticResource ToolTextBox}"
+					 IsEnabled="{Binding IsEnabled }"
+					 IsReadOnly="True"
+					 />
+		</StackPanel>
 
 		<StackPanel  Grid.Row="5" Grid.Column="1"
-			Orientation="Horizontal">
+			Orientation="Horizontal" VerticalAlignment="Bottom">
 			<Button 
                 Name="btn_preview"
                 Click="btn_preview_Click"
@@ -305,7 +323,9 @@
 				Width="82"
 				HorizontalAlignment="Left"
 				Style="{StaticResource ToolButton}"
-				ToolTip="Generate the command">
+				ToolTip="Generate the command"
+				IsEnabled="{Binding IsEnabled}"
+				>
 			</Button>
 			<Button 
                 Name="btn_copy"
@@ -314,16 +334,28 @@
 				Width="80"
 				HorizontalAlignment="Left"
 				Style="{StaticResource ToolButton}"
-				ToolTip="Copy command text to clipboard">
+				ToolTip="Copy command text to clipboard"
+				IsEnabled="{Binding IsEnabled}"
+				>
 			</Button>
 		</StackPanel>
-		
 
-		<Button Grid.Row="6" Grid.Column="0"
+		<StackPanel Grid.Row="6" Grid.Column="0"
+					Orientation="Horizontal">
+			<Button
                 Name="btn_run"
                 HorizontalAlignment="Left"
 				Style="{StaticResource ToolButton}"
 				Click="Btn_run_Click"
+				IsEnabled="{Binding IsEnabled}"
                 >Run</Button>
+
+			<Label Foreground="Red"
+				   Content="Invalid Command"
+				   Margin="10,0,0,0"
+				   Visibility="Hidden"
+				   Name="lbl_invalid"/>
+					
+		</StackPanel>
 	</Grid>
 </UserControl>

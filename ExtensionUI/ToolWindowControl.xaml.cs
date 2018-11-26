@@ -77,8 +77,6 @@
                 {
                     ToolViewModel.Commands.Add(command);
                 }
-
-                ToolViewModel.IsEnabled = true;
             }
         }
 
@@ -128,7 +126,7 @@
                             Alias = option.Alias,
                             Description = option.Description,
                             OptionType = option.OptionType,
-                            IsChecked = true
+                            IsChecked = false,
                         };
 
                         ToolViewModel.Options.Add(optionModel);
@@ -151,15 +149,27 @@
 
         private async void Btn_run_Click(object sender, RoutedEventArgs e)
         {
-            string cmd = "ng.cmd";
-            string args = "new proba --defaults --routing";
+            string command = GenerateCommand();
+            var invalidLabel = (Label)this.FindName("lbl_invalid");
 
-            // Working directory - deafult is Solution folder
-            // TODO do not set it here / rather set this as default where user sets the folder
-            var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
-            string path = System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+            if (ToolViewModel.InvalidCommand)
+            {
+                invalidLabel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                invalidLabel.Visibility = Visibility.Hidden;
 
-            await Task.Run(() => ExecuteCmd(cmd, args, path));
+                string cmd = "ng.cmd";
+                string args = "new proba --defaults --routing";
+
+                // Working directory - deafult is Solution folder
+                // TODO do not set it here / rather set this as default where user sets the folder
+                var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
+                string path = System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+
+                await Task.Run(() => ExecuteCmd(cmd, args, path));
+            }
         }
 
         private async Task ExecuteCmd(string cmd, string args, string path)
@@ -206,10 +216,17 @@
 
         private void btn_preview_Click(object sender, RoutedEventArgs e)
         {
+            ToolViewModel.FullCommandText = GenerateCommand();
+        }
+
+        private string GenerateCommand()
+        {
+            ToolViewModel.InvalidCommand = false;
+
             var stringBuilder = new StringBuilder("ng");
 
             if (_selectedCommand != null)
-                stringBuilder.Append(" "+_selectedCommand.Name);
+                stringBuilder.Append(" " + _selectedCommand.Name);
 
             foreach (var argument in ToolViewModel.Arguments)
             {
@@ -217,14 +234,14 @@
                 {
                     if (argument.NumberOfParams > 0)
                     {
-                        if (!String.IsNullOrEmpty(argument.ArgumentValue))
+                        if (!String.IsNullOrEmpty(argument.ArgumentValue) && (argument.ArgumentValue.Split(' ').Length == argument.NumberOfParams))
                             stringBuilder.Append(" " + argument.Name + "=" + argument.ArgumentValue);
                         else
                             ToolViewModel.InvalidCommand = true;
                     }
                     else
                     {
-                        stringBuilder.Append(" "+ argument.Name);
+                        stringBuilder.Append(" " + argument.Name);
                     }
                 }
             }
@@ -233,15 +250,27 @@
             {
                 if (option.IsChecked)
                 {
-                    stringBuilder.Append(" " + option.Name);
+                    stringBuilder.Append(" --" + option.Name);
                 }
                 else if (!String.IsNullOrEmpty(option.OptionValue))
                 {
-                    stringBuilder.Append(" " + option.Name+"="+option.OptionValue);
+                    stringBuilder.Append(" --" + option.Name + "=" + option.OptionValue);
                 }
             }
 
-            ToolViewModel.FullCommandText = stringBuilder.ToString();
+            return stringBuilder.ToString();
+        }
+
+        private void btn_upload_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new System.Windows.Forms.OpenFileDialog();
+
+            if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var streamReader = new System.IO.StreamReader(fileDialog.FileName);
+                System.IO.File.WriteAllText(Environment.CurrentDirectory,streamReader.ReadToEnd());
+                streamReader.Close();
+            }
         }
     }
 }
