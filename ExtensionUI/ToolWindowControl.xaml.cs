@@ -54,9 +54,14 @@
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
 				var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
-				string path = System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+				var fullname = dte.Solution.FullName;
 
-				dialog.SelectedPath = path;
+				if( !string.IsNullOrWhiteSpace(fullname))
+				{
+					string path = System.IO.Path.GetDirectoryName(fullname);
+					dialog.SelectedPath = path;
+				}
+
                 var dialogResult = dialog.ShowDialog();
 
                 if (dialogResult == System.Windows.Forms.DialogResult.OK)
