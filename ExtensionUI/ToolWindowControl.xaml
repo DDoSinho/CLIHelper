@@ -242,6 +242,7 @@
 								<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
 								<Setter Property="BorderThickness" Value="0"/>
 								<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+								<Setter Property="ToolTip" Value="{Binding Description}"/>
 							</Style>
 						</DataGridTextColumn.CellStyle>
 					</DataGridTextColumn>
@@ -252,7 +253,6 @@
 								<Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonTextKey}}"/>
 								<Setter Property="BorderThickness" Value="0"/>
 								<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-								<Setter Property="ToolTip" Value="{Binding Description}"/>
 							</Style>
 						</DataGridTemplateColumn.CellStyle>
 						<DataGridTemplateColumn.CellTemplate>
@@ -354,7 +354,8 @@
 				   Content="Invalid Command"
 				   Margin="10,0,0,0"
 				   Visibility="Hidden"
-				   Name="lbl_invalid"/>
+				   Name="lbl_invalid"
+				   VerticalAlignment="Center"/>
 					
 		</StackPanel>
 	</Grid>
