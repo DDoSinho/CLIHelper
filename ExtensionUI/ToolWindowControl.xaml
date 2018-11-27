@@ -268,7 +268,7 @@
 																<TextBox 
 																	 Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
 																	 Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ControlEditHintTextKey}}"
-																	 Text="{Binding OptionValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+																	 Text="{Binding OptionValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
 																	 />
 															</DataTemplate>
 														</Setter.Value>

@@ -35,11 +35,11 @@
         public ToolWindowControl()
         {
             ToolViewModel.CliTypes = new ObservableCollection<string>();
-			InitTool();
+            InitTool();
 
             ToolViewModel.Commands = new ObservableCollection<Command>();
 
-			ToolViewModel.PickedFolderPath = "Select folder";
+            ToolViewModel.PickedFolderPath = "Select folder";
 
             ToolViewModel.Arguments = new ItemsChangeObservableCollection<Model.ArgumentModel>();
             ToolViewModel.Options = new ItemsChangeObservableCollection<Model.OptionModel>();
@@ -53,14 +53,14 @@
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
-				var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
-				var fullname = dte.Solution.FullName;
+                var dte = (EnvDTE.DTE)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(EnvDTE.DTE));
+                var fullname = dte.Solution.FullName;
 
-				if( !string.IsNullOrWhiteSpace(fullname))
-				{
-					string path = System.IO.Path.GetDirectoryName(fullname);
-					dialog.SelectedPath = path;
-				}
+                if (!string.IsNullOrWhiteSpace(fullname))
+                {
+                    string path = System.IO.Path.GetDirectoryName(fullname);
+                    dialog.SelectedPath = path;
+                }
 
                 var dialogResult = dialog.ShowDialog();
 
@@ -81,7 +81,7 @@
             {
                 var parser = new CliCommandParser();
                 var tool = parser.Deserialize(selectedCliType);
-				ToolViewModel.Executable = tool.ExecutableFile;
+                ToolViewModel.Executable = tool.ExecutableFile;
 
                 foreach (var command in tool.Commands)
                 {
@@ -154,12 +154,12 @@
 
         private string GenerateFullCommandText()
         {
-			string cmd = "ng";
-			string args = GenerateCommand();
-			return $"{cmd} {args}";
-		}
+            string cmd = "ng";
+            string args = GenerateCommand();
+            return $"{cmd} {args}";
+        }
 
-		private async void Btn_run_Click(object sender, RoutedEventArgs e)
+        private async void Btn_run_Click(object sender, RoutedEventArgs e)
         {
             var invalidLabel = (Label)this.FindName("lbl_invalid");
 
@@ -171,10 +171,10 @@
             {
                 invalidLabel.Visibility = Visibility.Hidden;
 
-				string cmd = ToolViewModel.Executable;
-				string args = GenerateCommand();
+                string cmd = ToolViewModel.Executable;
+                string args = GenerateCommand();
                 //string args = "new proba --defaults --routing";
-				var path = ToolViewModel.PickedFolderPath;
+                var path = ToolViewModel.PickedFolderPath;
 
                 await Task.Run(() => ExecuteCmd(cmd, args, path));
             }
@@ -219,7 +219,10 @@
 
         private void btn_copy_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(ToolViewModel.FullCommandText);
+            if (!String.IsNullOrEmpty(ToolViewModel.FullCommandText))
+            {
+                Clipboard.SetText(ToolViewModel.FullCommandText);
+            }
         }
 
         private void btn_preview_Click(object sender, RoutedEventArgs e)
@@ -275,28 +278,28 @@
 
             if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-				DirectoryInfo di = Directory.CreateDirectory($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper");
-				var dir = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper\\{fileDialog.SafeFileName}";
+                DirectoryInfo di = Directory.CreateDirectory($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper");
+                var dir = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper\\{fileDialog.SafeFileName}";
 
-				var streamReader = new StreamReader(fileDialog.FileName);
-                File.WriteAllText(dir ,streamReader.ReadToEnd());
+                var streamReader = new StreamReader(fileDialog.FileName);
+                File.WriteAllText(dir, streamReader.ReadToEnd());
                 streamReader.Close();
-				ToolViewModel.CliTypes.Add(fileDialog.SafeFileName.Split('.')[0]);
-			}
+                ToolViewModel.CliTypes.Add(fileDialog.SafeFileName.Split('.')[0]);
+            }
         }
 
-		private void InitTool()
-		{
-			var sourceFile = $"{Environment.CurrentDirectory}\\..\\..\\angular.json";
-			var destFile = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper";
-			DirectoryInfo di = Directory.CreateDirectory(destFile);
-			File.Copy(sourceFile, $"{destFile}\\angular.json", true);
+        private void InitTool()
+        {
+            var sourceFile = $"{Environment.CurrentDirectory}\\..\\..\\angular.json";
+            var destFile = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\CLIHelper";
+            DirectoryInfo di = Directory.CreateDirectory(destFile);
+            File.Copy(sourceFile, $"{destFile}\\angular.json", true);
 
-			FileInfo[] Files = di.GetFiles("*.json");
-			foreach( FileInfo file in Files )
-			{
-				ToolViewModel.CliTypes.Add(file.Name.Split('.')[0]);
-			}
-		}
-	}
+            FileInfo[] Files = di.GetFiles("*.json");
+            foreach (FileInfo file in Files)
+            {
+                ToolViewModel.CliTypes.Add(file.Name.Split('.')[0]);
+            }
+        }
+    }
 }
